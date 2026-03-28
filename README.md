@@ -126,6 +126,21 @@ See [prd.json.example](./prd.json.example) for a minimal valid example.
 - Upstream runner supports Amp and Claude Code
 - This repository replaces only the loop runner and prompt template so the workflow can target Codex
 
+## Differences from Upstream Ralph
+
+| Area | Upstream Ralph | This Repository |
+|------|----------------|-----------------|
+| Primary runner | `ralph.sh` | `ralph-codex.sh` |
+| Supported tools | Amp, Claude Code | Codex CLI |
+| Execution entrypoint | `amp` or `claude` | `codex exec` |
+| Prompt file | `prompt.md` / `CLAUDE.md` | `CODEX.md` |
+| Completion detection | `<promise>COMPLETE</promise>` | Same |
+| Task state | `prd.json` + `progress.txt` | Same |
+| Archive state | `archive/` in runner directory | `.ralph/archive/` inside the state directory |
+| CLI integration | Manual upstream setup | Can be symlinked as `ralph-codex` |
+
+The goal is to preserve Ralph's one-story-per-iteration model while swapping the execution engine to Codex with minimal changes to the task-state format.
+
 ## License
 
 MIT. See [LICENSE](./LICENSE).
