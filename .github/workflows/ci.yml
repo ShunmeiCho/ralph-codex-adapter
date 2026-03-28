@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify script syntax
+        run: bash -n ./ralph-codex.sh
+
+      - name: Create codex stub for dry-run validation
+        run: |
+          mkdir -p .ci-bin
+          cat > .ci-bin/codex <<'EOF'
+          #!/usr/bin/env bash
+          exit 0
+          EOF
+          chmod +x .ci-bin/codex
+
+      - name: Validate dry-run mode
+        env:
+          PATH: ${{ github.workspace }}/.ci-bin:${{ env.PATH }}
+        run: |
+          mkdir -p /tmp/ralph-codex-ci
+          cp ./prd.json.example /tmp/ralph-codex-ci/prd.json
+          ./ralph-codex.sh --state-dir /tmp/ralph-codex-ci --dry-run 2
